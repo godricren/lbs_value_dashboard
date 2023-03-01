@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS `proj_gtn_tmp`.`t_ptp_s3u_gp_zt_kt_sq_invoice_summary_dwd`
+(
+`法人` string,
+`付款日期` string,
+`供应商` string,
+`省` string,
+`市` string,
+`金额` string,
+`备注` string,
+`入账Team` string,
+`币种` string,
+`USD金额` string,
+`accelate_payment` string,
+`accelate_payment_due_date` string,
+`expected_payment_proposal_date` string,
+`payment_term` string,
+`days` string,
+`sla_result_timeliness` string,
+`exclusion_timeliness` string,
+`exclusion_reason_specific_work_level_timeliness` string,
+`exclusion_reason_general_contract_level_timeliness` string,
+`exclusion_approved_by_timeliness` string,
+`sla_result_accuracy` string,
+`miss_type` string,
+`exclusion_accuracy` string,
+`exclusion_reason_specific_work_level_accuracy` string,
+`exclusion_reason_general_contract_level_accuracy` string,
+`exclusion_approved_by_accuracy` string,
+`dw_create_on` string,
+`dw_last_update` string,
+`dw_source_table` string
+)
+STORED AS PARQUET;
