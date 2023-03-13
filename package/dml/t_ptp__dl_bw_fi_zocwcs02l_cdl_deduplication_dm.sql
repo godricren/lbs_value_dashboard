@@ -41,7 +41,9 @@ FROM
         order by `dw_create_on`) as row_num
     FROM 
     `proj_gtn_tmp`.`t_ptp_s1a_bw_fi_zocwcs02l_cdl_deduplication_dwd`
-    WHERE company_code in ('0001','CN01','CN04','CN09','CN12','CN27','CN34','CN35','CN60','CN65','CNA2','CNA5','CNC0','CNC7','CNH2','CNH4')
+    WHERE company_code in ('0001','CN01','CN04','CN09',
+            'CN27','CN34','CN60','CN65','CNA2','CNA5','CNC0','CNC7',
+            'CND7','CNE5','CNH4','CNH2')
     and `clearing_document` like '09%'
     and `document_type` in ('DB','KG','KR','RE','SA')
     and `user_name` in (select distinct user_id from `proj_gtn_tmp`.`t_ptp_dalian_pp_user_id_ods`)
@@ -50,6 +52,31 @@ FROM
     --     and last_day(add_months(current_date,-1))
 )
 WHERE row_num = 1
+),
+lcfc as 
+(
+    SELECT
+    `company_code` ,`vendor` ,`document_number` ,
+    `document_type` ,`reference` ,`document_date` ,
+    `document_currency`,`amount_in_doc_curr` ,`local_currency_2` ,
+    `amount_in_loc_curr_2`,`amount_in_usd`,`clearing_document`,
+    `terms_of_payment` ,`days_1`,`clearing_date` 
+FROM 
+    (SELECT 
+    `company_code` ,`vendor` ,`document_number` ,
+    `document_type` ,`reference` ,`document_date` ,
+    `document_currency` ,`amount_in_doc_curr` ,
+    `local_currency_2` ,`amount_in_loc_curr_2` ,`amount_in_usd` ,
+    `clearing_document`,`terms_of_payment` ,`days_1` ,`clearing_date` ,
+    row_number() over(partition by `company_code`,`vendor` ,`document_number`,`clearing_date`
+        order by `dw_create_on`) as row_num
+    FROM 
+    `proj_gtn_tmp`.`t_ptp_s1a_bw_lcfc_fbl1n_dwd`
+   -- WHERE    cast(`clearing_date` as date) BETWEEN 
+    --     date_add(last_day(add_months(current_date,-2)),1) 
+    --     and last_day(add_months(current_date,-1))
+     )
+where row_num = 1
 )
 insert into `proj_gtn_tmp`.`t_ptp_s1a_bw_fi_zocwcs02l_cdl_deduplication_dm`
 SELECT 
@@ -94,4 +121,12 @@ SELECT
 `amount_in_loc_curr_2` ,`amount_in_usd` ,`clearing_document`,
 `terms_of_payment` ,`days_1` ,`clearing_date` 
 FROM pp_table
+UNION ALL 
+SELECT
+`company_code` ,`vendor` ,`document_number` ,
+`document_type` ,`reference` ,`document_date` ,
+`document_currency` ,`amount_in_doc_curr` ,`local_currency_2` ,
+`amount_in_loc_curr_2` ,`amount_in_usd` ,`clearing_document`,
+`terms_of_payment` ,`days_1` ,`clearing_date` 
+FROM lcfc
 )  stg ;

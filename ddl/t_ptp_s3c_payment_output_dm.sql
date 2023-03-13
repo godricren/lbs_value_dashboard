@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `proj_gtn_tmp`.`t_ptp_s3c_payment_output_dm`
 `definition` string,
 `unit` string,
 `gp_pp` string,
-`po_non-po` string,
+`po_non_po` string,
 `cash_credit_card` string,
 `sub_process` string,
 `category` string,

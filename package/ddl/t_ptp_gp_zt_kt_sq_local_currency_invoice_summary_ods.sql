@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `proj_gtn_tmp`.`t_ptp_gp_zt_kt_sq_local_currency_invoice_summary_ods`
 (
-   `company_code` string,
+`company_code` string,
 `clear_date` string,
 `vendor` string,
 `province` string,

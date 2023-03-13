@@ -1,8 +1,8 @@
 INSERT INTO `proj_gtn_tmp`.`t_ptp_s3u_gp_zt_kt_sq_invoice_summary_dm`
 SELECT    
-`法人` ,`付款日期` ,`供应商` ,
-`省` ,`市` ,`金额` ,
-`备注` ,`入账Team` ,`币种` ,`USD金额` ,
+`company_code` ,`clear_date` ,`vendor` ,
+`province` ,`city` ,`amount_in_local_currency` ,
+`comments` ,`clearing_team` ,`currency` ,`amount_in_usd` ,
 `accelate_payment` ,
 `accelate_payment_due_date` ,
 `expected_payment_proposal_date` ,
@@ -24,8 +24,9 @@ DATE_FORMAT(CURRENT_TIMESTAMP, 'yyyyMMddHHmmss') ,
 'proj_gtn_tmp.t_ptp_s3u_gp_zt_kt_sq_invoice_summary_dwd'
 FROM 
     (SELECT 
-        `法人` ,`付款日期` ,`供应商` ,`省` ,`市` ,`金额` ,
-        `备注` ,`入账Team` ,`币种` ,`USD金额` ,
+        `company_code` ,`clear_date` ,`vendor` ,`province` ,
+        `city` ,`amount_in_local_currency` ,
+        `comments` ,`clearing_team` ,`currency` ,`amount_in_usd` ,
         `accelate_payment` ,
         `accelate_payment_due_date` ,
         `expected_payment_proposal_date` ,
@@ -45,10 +46,11 @@ FROM
         `dw_create_on` ,
         `dw_last_update` ,
         `dw_source_table` ,
-        row_number() over(partition by `法人` ,`付款日期` ,`供应商` ,`省` ,`市` ,`金额`  
+        row_number() over(partition by `company_code` ,`clear_date` 
+        ,`vendor` ,`province` ,`city` ,`amount_in_local_currency`  
             order by dw_create_on desc) as row_num
     FROM `proj_gtn_tmp`.`t_ptp_s3u_gp_zt_kt_sq_invoice_summary_dwd`
-    WHERE cast(`付款日期` as date) BETWEEN 
+    WHERE cast(`clear_date` as date) BETWEEN 
         date_add(last_day(add_months(current_date,-2)),1) 
         and last_day(add_months(current_date,-1)))
 WHERE row_num = 1;
